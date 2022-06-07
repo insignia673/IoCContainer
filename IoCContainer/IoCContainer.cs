@@ -35,7 +35,7 @@ namespace IoCContainer
 
             foreach (var c in classes)
             {
-                var Ic = interfaces.FirstOrDefault(i => i.Name == 'I' + c.Name);
+                var Ic = interfaces.First(i => i.Name == 'I' + c.Name);
                 _containerBuilder.Add(Ic, c);
             }
         }
