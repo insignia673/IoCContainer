@@ -14,7 +14,7 @@ namespace IoCContainer
             //container.Register<IBar, Bar>();
             //container.Register<IBaz, Baz>();
             var foo = container.Resolve<IFoo>();
-            foo.DoStuff();
+            //foo.DoStuff();
         }
     }
 }

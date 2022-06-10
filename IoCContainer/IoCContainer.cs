@@ -15,7 +15,7 @@ namespace IoCContainer
             _containerBuilder = new ContainerBuilder();
         }
 
-        public void Register<TInterface, TType>()
+        public void Register<TInterface, TType>() where TType : TInterface
         {
             _containerBuilder.Add(typeof(TInterface), typeof(TType));
         }
@@ -52,21 +52,17 @@ namespace IoCContainer
 
         public object GetInstance(Type type)
         {
+            if (!contractAndClass.TryGetValue(type, out var resultType))
+            {
+                throw new InvalidOperationException($"{type.Name} does not exist");
+            }
+
             var instance = contractAndClass[type];
 
             var ctor = instance.GetConstructors()[0];
-            var param = ctor.GetParameters();
-
-            var parameters = param
-                .Where(x => contractAndClass.ContainsKey(x.ParameterType))
-                .Select(x => x.ParameterType)
+            var args = ctor.GetParameters()
+                .Select(x => GetInstance(x.ParameterType))
                 .ToArray();
-
-            object[] args = new object[parameters.Count()];
-            for (int i = 0; i < args.Length; i++)
-            {
-                args[i] = GetInstance(parameters[i]);
-            }
 
             return Activator.CreateInstance(instance, args);
         }
