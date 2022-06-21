@@ -57,14 +57,12 @@ namespace IoCContainer
                 throw new InvalidOperationException($"{type.Name} does not exist");
             }
 
-            var instance = contractAndClass[type];
-
-            var ctor = instance.GetConstructors()[0];
+            var ctor = resultType.GetConstructors()[0];
             var args = ctor.GetParameters()
                 .Select(x => GetInstance(x.ParameterType))
                 .ToArray();
 
-            return Activator.CreateInstance(instance, args);
+            return Activator.CreateInstance(resultType, args);
         }
     }
 }
